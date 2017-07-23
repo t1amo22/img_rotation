@@ -1,0 +1,224 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8">
+    <title>轮播图</title>
+    <style>
+        * {
+            margin:0;
+            padding:0;
+        }
+        a{
+            text-decoration: none;
+        }
+        .container {
+            position: relative;
+            width: 600px;
+            height: 400px;
+            margin:100px auto 0 auto;
+            box-shadow: 0 0 5px green;
+            overflow: hidden;
+        }
+        .container .wrap {
+            position: absolute;
+            width: 4200px;
+            height: 400px;
+            z-index: 1;
+        }
+        .container .wrap img {
+            float: left;
+            width: 600px;
+            height: 400px;
+        }
+        .container .buttons {
+            position: absolute;
+            right: 5px;
+            bottom:40px;
+            width: 150px;
+            height: 10px;
+            z-index: 2;
+        }
+        .container .buttons span {
+            margin-left: 5px;
+            display: inline-block;
+            width: 20px;
+            height: 20px;
+            border-radius: 50%;
+            background-color: green;
+            text-align: center;
+            color:white;
+            cursor: pointer;
+        }
+        .container .buttons span.on{
+            background-color: red;
+        }
+        .container .arrow {
+            position: absolute;
+            top: 35%;
+            color: green;
+            padding:0px 14px;
+            border-radius: 50%;
+            font-size: 50px;
+            z-index: 2;
+            display: none;
+        }
+        .container .arrow_left {
+            left: 10px;
+        }
+        .container .arrow_right {
+            right: 10px;
+        }
+        .container:hover .arrow {
+            display: block;
+        }
+        .container .arrow:hover {
+            background-color: rgba(0,0,0,0.2);
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="wrap" style="left: -600px;">
+            <img src="5.jpg">
+            <img src="1.jpg">
+            <img src="2.jpg">
+            <img src="3.jpg">
+            <img src="4.jpg">
+            <img src="5.jpg">
+            <img src="1.jpg">
+        </div>
+        <div class="buttons">
+            <span class="on">1</span>
+            <span>2</span>
+            <span>3</span>
+            <span>4</span>
+            <span>5</span>
+        </div>
+        <a href="javascript:;" class="arrow arrow_left">&lt;</a>
+        <a href="javascript:;" class="arrow arrow_right">&gt;</a>
+    </div>
+    <script>
+     var container = document.querySelector(".container");
+     var buttons = document.querySelector(".buttons");
+     var wrap = document.querySelector(".wrap");
+     var next = document.querySelector(".arrow_right");
+     var prev = document.querySelector(".arrow_left");
+     
+
+     function next_pic () {
+     	index++;
+     	 if (index>4) {
+     	 	index=0;
+     	 }
+     	changeDot(index);
+     	var left=parseInt(wrap.style.left);
+     	var newLeft;
+     	if(left===-3600){
+     		newLeft = -1200;
+     	}else{
+     		newLeft = parseInt(wrap.style.left)-600;
+     	}
+        wrap.style.left = newLeft + "px";
+     }
+
+     function prev_pic () {
+     	index--;
+     	if (index<0) {
+     	 	index=4;
+     	 }
+     	changeDot(index);
+     	var left=parseInt(wrap.style.left);
+     	var newleft;
+     	if(left===0){
+     		newleft = -2400;
+     	}else{
+     		newleft = parseInt(wrap.style.left)+600;
+     	}
+        wrap.style.left = newleft + "px";
+     }
+
+     var index=0;
+
+     next.onclick = function () {
+         next_pic();
+     }
+
+     prev.onclick = function () {
+        prev_pic();
+     }
+     
+     var dots=document.getElementsByTagName("span");
+     function changeDot(index){
+     	//清空所有span的class
+     		for(var i=0;i<dots.length;i++){
+     			dots[i].className="";
+     		}
+     		//给span添加classon
+     	dots[index].className="on";
+     }
+
+     var timer=null;
+
+     function autoplay(){
+     	timer = setInterval(function(){
+     		next_pic();
+     	},1000);
+     }
+
+     autoplay();
+
+     //鼠标悬浮的时候清除定时器
+
+     container.onmouseenter=function(){
+     	clearInterval(timer);
+     }
+ //鼠标离开的时候自动播放
+      container.onmouseleave=function(){
+     	autoplay();
+     }
+
+     
+    
+// 当点击小圆点时， 就可跳转到相应图片，给每个span绑定click事件，点击相应的span获取到它的innerHTML
+// 然后变化left值，使用事件代理
+buttons.onclick=function(e){
+	var e= e || window.event;
+	var target= e.target || e.srcElement;
+    if (target.nodeName==="SPAN") {
+    	var i=parseInt(target.innerHTML)-1
+    	changeImg(i);
+    	changeDot(i);
+    }
+}
+
+function changeImg(i){
+	switch(i){
+		case 0:
+			setLeft(-600);
+			break;
+		case 1:
+			setLeft(-1200);
+			break;
+		case 2:
+			setLeft(-1800);
+			break;
+		case 3:
+			setLeft(-2400);
+			break;
+		case 4:
+			setLeft(-3000);
+			break;
+	}
+}
+
+function setLeft(left){
+	wrap.style.left= left +'px';
+}
+
+
+
+   
+
+ </script>
+</body>
+</html>
